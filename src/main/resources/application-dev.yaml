@@ -1,0 +1,50 @@
+logging:
+  level:
+    org.springframework.web: INFO
+    org.mongodb.driver: INFO
+    org.springframework.data.mongodb.core: DEBUG
+
+server:
+  servlet:
+    context-path: /api/v1/ebs
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/event-db
+    username: postgres
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    pass-key: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+spring-doc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
+secret:
+  key: {$secret_key}
+
+#cloud:
+#  aws:
+#    region:
+#      static: ap-south-1
+#    ses:
+#      sender: pluggy-dev@prismberry.com
+#    bucket:
+#      name: pluggy-s3-bucket

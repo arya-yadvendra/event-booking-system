@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    active: ${profiles_active}
+  application:
+    name: event-booking-system
+
+app:
+  message: This is primary Application property for ${spring.application.name}
