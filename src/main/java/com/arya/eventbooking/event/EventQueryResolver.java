@@ -1,6 +1,7 @@
 package com.arya.eventbooking.event;
 
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,4 +14,5 @@ public class EventQueryResolver {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getName(); // email/username from JWT
     }
+
 }

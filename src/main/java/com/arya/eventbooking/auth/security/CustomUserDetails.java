@@ -1,8 +1,8 @@
 package com.arya.eventbooking.auth.security;
 
+
 import com.arya.eventbooking.auth.entity.Role;
 import com.arya.eventbooking.auth.entity.User;
-import com.arya.eventbooking.auth.entity.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,9 +21,9 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<UserRole> roles = user.getRoles();
+        Set<Role> roles = user.getRoles();
         return roles.stream()
-                .map(r -> new SimpleGrantedAuthority("ROLE_" + r.getRole().getName()))
+                .map(r -> new SimpleGrantedAuthority("ROLE_" + r.getName()))
                 .collect(Collectors.toSet());
     }
 

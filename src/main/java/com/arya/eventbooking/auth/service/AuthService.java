@@ -13,6 +13,8 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+
 @Slf4j
 @Service
 public class AuthService {
@@ -39,26 +41,16 @@ public class AuthService {
             return new GenericResponse<>(Constant.FAILURE, "Email already registered", null);
         }
 
+        Role userRole = roleRepo.findByName("USER")
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
         User user = User.builder()
                 .email(request.email())
                 .password(encoder.encode(request.password()))
-                .name(request.name())
-                .provider(AuthProvider.LOCAL)
                 .enabled(true)
+                .provider(AuthProvider.LOCAL)
+                .roles(Collections.singleton(userRole))
                 .build();
-
-        userRepo.save(user);
-
-        Role role = roleRepo.findByName("USER")
-                .orElseThrow(() -> new RuntimeException("Role USER not found"));
-
-        UserRole userRole = UserRole.builder()
-                .id(new UserRoleId(user.getId(), role.getId()))
-                .user(user)
-                .role(role)
-                .build();
-
-        user.getRoles().add(userRole);
 
         userRepo.save(user);
 
