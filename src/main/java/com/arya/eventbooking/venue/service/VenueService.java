@@ -1,5 +1,7 @@
 package com.arya.eventbooking.venue.service;
 
+import com.arya.eventbooking.util.GeneralUtility;
+import com.arya.eventbooking.util.GenericResponse;
 import com.arya.eventbooking.venue.dtos.CreateSectionRequest;
 import com.arya.eventbooking.venue.dtos.CreateVenueRequest;
 import com.arya.eventbooking.venue.entity.Seat;
@@ -19,7 +21,7 @@ public class VenueService {
         this.venueRepo = venueRepository;
     }
 
-    public Venue createVenue(CreateVenueRequest request) {
+    public GenericResponse<?> createVenue(CreateVenueRequest request) {
         Venue venue = Venue.builder()
                 .name(request.getName())
                 .city(request.getCity())
@@ -27,15 +29,15 @@ public class VenueService {
                 .totalSeats(request.getTotalSeats())
                 .build();
 
-        return venueRepo.save(venue);
+        return GeneralUtility.successResponse("Venue created successfully!", venueRepo.save(venue));
     }
 
-    public List<Venue> getAllVenues() {
-        return venueRepo.findAll();
+    public GenericResponse<?> getAllVenues() {
+        return GeneralUtility.successResponse("Venue list fetched successfully!", venueRepo.findAll());
     }
 
     @Transactional
-    public Venue addSections(Long venueId, List<CreateSectionRequest> requests) {
+    public GenericResponse<?> addSections(Long venueId, List<CreateSectionRequest> requests) {
 
         Venue venue = venueRepo.findById(venueId)
                 .orElseThrow(() -> new RuntimeException("Venue not found"));
@@ -60,7 +62,7 @@ public class VenueService {
                 }).toList();
 
         venue.getSections().addAll(sections);
-        return venue;
+        return GeneralUtility.successResponse("Sections added successfully!", venueRepo.save(venue));
     }
 
 

@@ -5,11 +5,11 @@ import com.arya.eventbooking.event.entity.EventSeat;
 import com.arya.eventbooking.event.enums.SeatStatus;
 import com.arya.eventbooking.event.repository.EventRepository;
 import com.arya.eventbooking.event.repository.EventSeatRepository;
+import com.arya.eventbooking.util.GeneralUtility;
+import com.arya.eventbooking.util.GenericResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +19,7 @@ public class EventService {
     private final EventSeatRepository eventSeatRepo;
 
     @Transactional
-    public Event createEvent(Event event) {
-
+    public GenericResponse<?> createEvent(Event event) {
         Event savedEvent = eventRepo.save(event);
 
         // Generate event-seat availability
@@ -38,10 +37,12 @@ public class EventService {
                         )
                 );
 
-        return savedEvent;
+        return GeneralUtility.successResponse("Event creation successful!", savedEvent);
     }
 
-    public List<Event> getActiveEvents() {
-        return eventRepo.findByActiveTrue();
+    public GenericResponse<?> getActiveEvents() {
+        return GeneralUtility.successResponse(
+                "Events list fetched successfully!", eventRepo.findByActiveTrue()
+        );
     }
 }

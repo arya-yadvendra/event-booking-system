@@ -1,13 +1,12 @@
 package com.arya.eventbooking.venue.controller;
 
-import com.arya.eventbooking.util.GeneralUtility;
+import com.arya.eventbooking.util.Constant;
 import com.arya.eventbooking.util.GenericResponse;
 import com.arya.eventbooking.venue.dtos.CreateSectionRequest;
 import com.arya.eventbooking.venue.dtos.CreateVenueRequest;
-import com.arya.eventbooking.venue.entity.Section;
-import com.arya.eventbooking.venue.entity.Venue;
 import com.arya.eventbooking.venue.service.VenueService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,36 +22,34 @@ public class VenueController {
         this.venueService = venueService;
     }
 
-    @PostMapping
+    @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<GenericResponse<Venue>> createVenue(@RequestBody @Valid CreateVenueRequest request) {
-        return ResponseEntity.ok(
-                GeneralUtility.successResponse(
-                        "Venue created",
-                        venueService.createVenue(request)
-                )
-        );
+    public ResponseEntity<GenericResponse<?>> createVenue(@RequestBody @Valid CreateVenueRequest request) {
+        GenericResponse<?> response = venueService.createVenue(request);
+        if (response.getStatus().equals(Constant.SUCCESS)) {
+            return ResponseEntity.ok(response);
+        }
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-
-    @GetMapping
-    public List<Venue> getVenues() {
-        return venueService.getAllVenues();
+    @GetMapping("/list-all")
+    public ResponseEntity<GenericResponse<?>> getVenues() {
+        GenericResponse<?> response = venueService.getAllVenues();
+        if (response.getStatus().equals(Constant.SUCCESS)) {
+            return ResponseEntity.ok(response);
+        }
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/{venueId}/sections")
+    @PostMapping("/{venueId}/add-sections")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<GenericResponse<Venue>> addSections(
-            @PathVariable Long venueId,
-            @RequestBody @Valid List<CreateSectionRequest> sections
-    ) {
-        return ResponseEntity.ok(
-                GeneralUtility.successResponse(
-                        "Sections added",
-                        venueService.addSections(venueId, sections)
-                )
-        );
+    public ResponseEntity<GenericResponse<?>> addSections(@PathVariable Long venueId,
+                                                          @RequestBody @Valid List<CreateSectionRequest> sections) {
+        GenericResponse<?> response = venueService.addSections(venueId, sections);
+        if (response.getStatus().equals(Constant.SUCCESS)) {
+            return ResponseEntity.ok(response);
+        }
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-
 
 }

@@ -22,7 +22,6 @@ public class Seat {
     private Long id;
 
     private String seatNumber; // A1, A2, B5
-
     private String row;
 
     @ManyToOne
